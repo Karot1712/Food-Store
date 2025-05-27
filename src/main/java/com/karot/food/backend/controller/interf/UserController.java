@@ -12,12 +12,6 @@ import java.util.Map;
 @RequestMapping(path = "/user")
 public interface UserController {
 
-    @PostMapping(path = "/signup")
-    public ResponseEntity<Response> signUp(@RequestBody UserDto registrationRequest);
-
-    @PostMapping(path = "/login")
-    public ResponseEntity<Response> login(@RequestBody LoginRequest loginRequest);
-
     @GetMapping(path = "/get-all-user")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> getAllUser();
@@ -36,7 +30,11 @@ public interface UserController {
     );
 
     @PostMapping(path = "/change-password")
-    public ResponseEntity<Response>changePassword(@RequestParam Long id,
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    public ResponseEntity<Response>changePassword(@RequestParam String oldPassword,
                                                   @RequestParam String password
     );
+
+    @PostMapping(path = "/forgot-password")
+    public ResponseEntity<Response>forgotPassword(@RequestParam String email);
 }

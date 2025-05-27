@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface UserRepo extends JpaRepository<User,Long> {
     Optional<User> findByEmail(String email);
-
+//    User findByEmailToString(String email);
     @Query("select u.email from User u where u.role = 0")
     List<String> findAllAdmin();
 }

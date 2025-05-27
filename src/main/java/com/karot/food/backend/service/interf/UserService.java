@@ -8,10 +8,10 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 public interface UserService {
-    Response signUp(UserDto registrationRequest);
-    Response loginUser(LoginRequest loginRequest);
     Response getAllUser();
     Response getAllAdmin();
     Response updateUser(Long id, String email, String name, String password, String approve);
-    Response changePassword(Long id, String password);
+    Response changePassword(String oldPassword, String password);
+    Response forgotPassword(String email);
+
 }

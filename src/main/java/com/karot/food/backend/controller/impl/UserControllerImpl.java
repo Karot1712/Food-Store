@@ -21,16 +21,6 @@ public class UserControllerImpl implements UserController {
     private final UserService userService;
 
     @Override
-    public ResponseEntity<Response> signUp(UserDto registrationRequest) {
-        return ResponseEntity.ok(userService.signUp(registrationRequest));
-    }
-
-    @Override
-    public ResponseEntity<Response> login(LoginRequest loginRequest) {
-        return ResponseEntity.ok(userService.loginUser(loginRequest));
-    }
-
-    @Override
     public ResponseEntity<Response> getAllUser() {
         return ResponseEntity.ok(userService.getAllUser());
     }
@@ -46,7 +36,12 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public ResponseEntity<Response> changePassword(Long id, String password) {
-        return ResponseEntity.ok(userService.changePassword(id,password));
+    public ResponseEntity<Response> changePassword(String oldPassword, String password) {
+        return ResponseEntity.ok(userService.changePassword(oldPassword,password));
+    }
+
+    @Override
+    public ResponseEntity<Response> forgotPassword(String email) {
+        return ResponseEntity.ok(userService.forgotPassword(email));
     }
 }

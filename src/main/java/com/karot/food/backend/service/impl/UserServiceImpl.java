@@ -1,18 +1,18 @@
 package com.karot.food.backend.service.impl;
 
-import com.karot.food.backend.DTO.LoginRequest;
+import com.google.common.base.Strings;
 import com.karot.food.backend.DTO.Response;
 import com.karot.food.backend.DTO.UserDto;
-import com.karot.food.backend.Utils.EmailUtil;
-import com.karot.food.backend.enums.UserRole;
+import com.karot.food.backend.Utils.EmailUtils;
+import com.karot.food.backend.Utils.VerificationUtils;
 import com.karot.food.backend.security.JwtAuthFilter;
 import com.karot.food.backend.security.JwtUtil;
-import com.karot.food.backend.exception.InvalidCredentialException;
 import com.karot.food.backend.exception.NotFoundException;
 import com.karot.food.backend.mapper.EntityDtoMapper;
 import com.karot.food.backend.model.User;
 import com.karot.food.backend.repositories.UserRepo;
 import com.karot.food.backend.service.interf.UserService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,7 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -34,62 +34,9 @@ public class UserServiceImpl implements UserService {
     private final EntityDtoMapper entityDtoMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    @Autowired
     private final JwtAuthFilter jwtFilter;
-    @Autowired
-    private EmailUtil emailUtil;
-
-    @Override
-    public Response signUp(UserDto registrationRequest) {
-        UserRole role = UserRole.USER;
-
-        if(registrationRequest.getRole() != null && registrationRequest.getRole().equalsIgnoreCase("Admin")){
-            role = UserRole.ADMIN;
-        }
-
-        User user = User.builder()
-                .id(registrationRequest.getId())
-                .name(registrationRequest.getName())
-                .email(registrationRequest.getEmail())
-                .password(passwordEncoder.encode(registrationRequest.getPassword()))
-                .phoneNumber(registrationRequest.getPhoneNumber())
-                .approve("false")
-                .role(role)
-                .build();
-
-        User savedUser = userRepo.save(user);
-        UserDto userDto = entityDtoMapper.mapUserToDto(savedUser);
-
-        return Response.builder()
-                .status(200)
-                .message("User Successfully Added")
-                .user(userDto)
-                .build();
-    }
-
-    @Override
-    public Response loginUser(LoginRequest loginRequest) {
-        User user = userRepo.findByEmail(loginRequest.getEmail()).orElseThrow(()-> new NotFoundException("User not found"));
-        if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
-            throw new InvalidCredentialException("Password not match");
-        }
-        String token = jwtUtil.generateToken(user);
-
-        if(user.getApprove().equalsIgnoreCase("false")){
-            return Response.builder()
-                    .status(400)
-                    .message("Wait for admin approval")
-                    .build();
-        }
-
-        return Response.builder()
-                .status(200)
-                .message("Login success")
-                .token(token)
-                .expirationTime("1 week")
-                .role(user.getRole().name())
-                .build();
-    }
+    private EmailUtils emailUtils;
+    private final VerificationUtils verificationUtils;
 
     @Override
     public Response getAllUser() {
@@ -123,7 +70,6 @@ public class UserServiceImpl implements UserService {
 
         if(email != null)user.setEmail(email);
         if(name != null)user.setName(name);
-        if(password != null)user.setPassword(password);
         if(approve != null)user.setApprove(approve);
 
         userRepo.save(user);
@@ -140,9 +86,9 @@ public class UserServiceImpl implements UserService {
             admin.remove(jwtFilter.getCurrentUser());
             
             if(approve != null && approve.equalsIgnoreCase("true")){
-                emailUtil.sendSimpleMessage(jwtFilter.getCurrentUser(),"Account Approve","USER:- " + user + "\n is approve by \nADMIN:- " + jwtFilter.getCurrentUser(),admin);
+                emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(),"Account Approve","USER:- " + user + "\n is approve by \nADMIN:- " + jwtFilter.getCurrentUser(),admin);
             } else {
-                emailUtil.sendSimpleMessage(jwtFilter.getCurrentUser(),"Account Disable","USER:- " + user + "\n is disable by \nADMIN:- " + jwtFilter.getCurrentUser(),admin);
+                emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(),"Account Disable","USER:- " + user + "\n is disable by \nADMIN:- " + jwtFilter.getCurrentUser(),admin);
             }
         }catch (Exception e){
             log.error("e: ", e);
@@ -151,22 +97,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response changePassword(Long id, String password) {
-        User user = userRepo.findById(id).orElseThrow(()-> new NotFoundException("User not found"));
-        String oldPassword = user.getPassword();
-        System.out.println(oldPassword);
-        //check the old
-        if(passwordEncoder.matches(password,oldPassword)){
+    public Response changePassword(String oldPassword, String password) {
+        User user = userRepo.findByEmail(jwtFilter.getCurrentUser()).orElseThrow(()-> new NotFoundException("User not found"));
+        //check the old password
+        if(passwordEncoder.matches(oldPassword, user.getPassword())){
             return Response.builder()
                     .status(400)
-                    .message("The new password must be different from the current password.")
+                    .message("Incorrect old password.")
                     .build();
         } else {
-            user.setPassword(password);
+            user.setPassword(passwordEncoder.encode(password));
         }
+        userRepo.save(user);
         return Response.builder()
                 .status(200)
-                .message("Password changed successful")
+                .message("Password updated successfully")
+                .build();
+    }
+
+    @Override
+    public Response forgotPassword(String email) {
+        log.info("mail: {}" , email);
+        User user = userRepo.findByEmail(email).orElseThrow(()->new NotFoundException("User not found"));
+        String code = verificationUtils.generationCode(email);
+        if (!Objects.isNull(user.getEmail()) && !Strings.isNullOrEmpty(user.getEmail())) {
+            try {
+                emailUtils.forgetMail(user.getEmail(),"Get verification code", code);
+            } catch (MessagingException e) {
+                log.info("error: ",e);
+                throw new RuntimeException(e);
+            }
+        }
+
+        return Response.builder()
+                .message("Check mail for Credentials.")
                 .build();
     }
 }
