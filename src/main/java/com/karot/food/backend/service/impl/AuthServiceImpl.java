@@ -1,22 +1,21 @@
 package com.karot.food.backend.service.impl;
 
 import com.karot.food.backend.DTO.LoginRequest;
+import com.karot.food.backend.DTO.MailBody;
 import com.karot.food.backend.DTO.Response;
 import com.karot.food.backend.DTO.UserDto;
-import com.karot.food.backend.Utils.EmailUtils;
-import com.karot.food.backend.Utils.VerificationUtils;
+import com.karot.food.backend.service.EmailService;
+import com.karot.food.backend.utils.VerificationUtils;
 import com.karot.food.backend.enums.UserRole;
 import com.karot.food.backend.exception.InvalidCredentialException;
 import com.karot.food.backend.exception.NotFoundException;
 import com.karot.food.backend.mapper.EntityDtoMapper;
 import com.karot.food.backend.model.User;
 import com.karot.food.backend.repositories.UserRepo;
-import com.karot.food.backend.security.JwtAuthFilter;
 import com.karot.food.backend.security.JwtUtil;
 import com.karot.food.backend.service.interf.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +27,10 @@ public class AuthServiceImpl implements AuthService {
     private final EntityDtoMapper entityDtoMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final EmailUtils emailUtils;
+//    private final EmailUtils emailUtils;
+    private final EmailService emailService;
     private final VerificationUtils verificationUtils;
+
 
 
     @Override
@@ -52,10 +53,20 @@ public class AuthServiceImpl implements AuthService {
 
         User savedUser = userRepo.save(user);
         UserDto userDto = entityDtoMapper.mapUserToDto(savedUser);
-        log.info("User email: " + userDto.getEmail());
         String code = verificationUtils.generationCode(userDto.getEmail());
-        emailUtils.sendVerificationMail(savedUser.getEmail(),"Activating your account",code);
-        log.info("code: " + code);
+//        emailUtils.sendVerificationMail(savedUser.getEmail(),"Activating your account",code);
+        MailBody mailBody = MailBody.builder()
+                .to(savedUser.getEmail())
+                .subject("Activate your account")
+                //will change later when doing fe part
+                .text("<b>Click here to activate your account: </b><br><a href='http://localhost:5051/auth/approve/"+ savedUser.getEmail() + "/" + code + "'> Here </a>")
+                .build();
+        try {
+            emailService.sendMimeMessage(mailBody);
+        } catch (Exception e) {
+            log.info("error" + e);
+        }
+
         return Response.builder()
                 .status(200)
                 .message("User successfully added, please check your email for verify code.")

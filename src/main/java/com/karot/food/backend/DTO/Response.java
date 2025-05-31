@@ -22,4 +22,7 @@ public class Response {
     private UserDto user;
     private List<UserDto> userList;
     private List<String> listOfEmail;
+
+    private CategoryDto category;
+    private List<CategoryDto> categoryList;
 }

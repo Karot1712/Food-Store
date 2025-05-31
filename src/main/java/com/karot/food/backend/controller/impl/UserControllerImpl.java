@@ -1,17 +1,13 @@
 package com.karot.food.backend.controller.impl;
 
-import com.karot.food.backend.DTO.LoginRequest;
 import com.karot.food.backend.DTO.Response;
-import com.karot.food.backend.DTO.UserDto;
 import com.karot.food.backend.controller.interf.UserController;
-import com.karot.food.backend.model.User;
 import com.karot.food.backend.service.interf.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,13 +31,5 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.ok(userService.updateUser(id, email, name, password, approve));
     }
 
-    @Override
-    public ResponseEntity<Response> changePassword(String oldPassword, String password) {
-        return ResponseEntity.ok(userService.changePassword(oldPassword,password));
-    }
 
-    @Override
-    public ResponseEntity<Response> forgotPassword(String email) {
-        return ResponseEntity.ok(userService.forgotPassword(email));
-    }
 }

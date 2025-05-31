@@ -1,6 +1,8 @@
 package com.karot.food.backend.mapper;
 
+import com.karot.food.backend.DTO.CategoryDto;
 import com.karot.food.backend.DTO.UserDto;
+import com.karot.food.backend.model.Category;
 import com.karot.food.backend.model.User;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,14 @@ public class EntityDtoMapper {
         userDto.setPhoneNumber(user.getPhoneNumber());
         userDto.setRole(user.getRole().name());
         return userDto;
+    }
+
+    //Category -> DTO
+    public CategoryDto mapCategoryToDto(Category category){
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setId(category.getId());
+        categoryDto.setName(categoryDto.getName());
+        return categoryDto;
     }
 
 }

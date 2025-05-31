@@ -44,4 +44,7 @@ public class User  {
     @Column(name = "role")
     private UserRole role;
 
+    @OneToOne(mappedBy = "user")
+    private ForgotPassword forgotPassword;
+
 }

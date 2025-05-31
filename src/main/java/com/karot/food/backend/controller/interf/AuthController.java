@@ -15,9 +15,9 @@ public interface AuthController {
     @PostMapping(path = "/login")
     public ResponseEntity<Response> login(@RequestBody LoginRequest loginRequest);
 
-    @PostMapping(path = "/approve")
-    public ResponseEntity<Response>approve(@RequestParam String email,
-                                           @RequestParam String code
+    @PostMapping(path = "/approve/{email}/{code}")
+    public ResponseEntity<Response>approve(@PathVariable String email,
+                                           @PathVariable String code
     );
 
 

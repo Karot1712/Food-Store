@@ -1,4 +1,4 @@
-package com.karot.food.backend.Utils;
+package com.karot.food.backend.utils;
 
 import com.karot.food.backend.constants.FoodConstant;
 import org.springframework.stereotype.Service;
@@ -7,7 +7,6 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class VerificationUtils {

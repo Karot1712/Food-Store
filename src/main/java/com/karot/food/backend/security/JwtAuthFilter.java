@@ -32,7 +32,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             username = jwtUtil.extractUserName(token);
             UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
 
-            System.out.println(jwtUtil.isValidToken(token,userDetails));
             if(StringUtils.hasText(username) && jwtUtil.isValidToken(token,userDetails)){
 
                 log.info("VALID JWT FOR {}",username);
