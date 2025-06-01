@@ -27,8 +27,8 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public ResponseEntity<Response> updateUser(Long id, String email, String name, String password, String approve) {
-        return ResponseEntity.ok(userService.updateUser(id, email, name, password, approve));
+    public ResponseEntity<Response> updateUserInfo(Long id, String email, String name, String password) {
+        return ResponseEntity.ok(userService.updateUserInfo(id, email, name, password));
     }
 
 

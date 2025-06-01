@@ -10,6 +10,6 @@ import java.util.Map;
 public interface UserService {
     Response getAllUser();
     Response getAllAdmin();
-    Response updateUser(Long id, String email, String name, String password, String approve);
+    Response updateUserInfo(Long id, String email, String name, String password);
 
 }

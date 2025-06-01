@@ -28,13 +28,9 @@ public class  UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final EntityDtoMapper entityDtoMapper;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
-    private final JwtAuthFilter jwtFilter;
-    private final VerificationUtils verificationUtils;
 
     @Override
     public Response getAllUser() {
-
         List<UserDto> userList = userRepo.findAll()
                 .stream()
                 .map(entityDtoMapper::mapUserToDto)
@@ -56,13 +52,12 @@ public class  UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response updateUser(Long id, String email, String name, String password, String approve) {
-        User user = userRepo.findById(id).orElseThrow(()-> new NotFoundException("User not found"));
-        List<String> list = userRepo.findAllAdmin().stream().toList();
+    public Response updateUserInfo(Long id, String email, String name, String password) {
+        User user = userRepo.findById(id).orElseThrow(()-> new NotFoundException("User not exist"));
 
         if(email != null)user.setEmail(email);
         if(name != null)user.setName(name);
-        if(approve != null)user.setApprove(approve);
+        if(password != null) user.setPassword(passwordEncoder.encode(password));
 
         userRepo.save(user);
         return Response.builder()

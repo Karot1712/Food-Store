@@ -18,12 +18,11 @@ public interface UserController {
     public ResponseEntity<Response> getAllAdmin();
 
     @PostMapping(path = "/update")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Response>updateUser(@RequestParam(required = false) Long id,
+    public ResponseEntity<Response>updateUserInfo(@RequestParam Long id,
                                               @RequestParam(required = false) String email,
                                               @RequestParam(required = false) String name,
-                                              @RequestParam(required = false) String password,
-                                              @RequestParam(required = false) String approve
+                                              @RequestParam(required = false) String password
+
     );
 
 
