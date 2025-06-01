@@ -25,4 +25,7 @@ public class Response {
 
     private CategoryDto category;
     private List<CategoryDto> categoryList;
+
+    private ProductDto product;
+    private List<ProductDto> productList;
 }

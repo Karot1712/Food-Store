@@ -17,4 +17,19 @@ public class CategoryControllerImpl implements CategoryController {
     public ResponseEntity<Response> createCategory(CategoryDto categoryDto) {
         return ResponseEntity.ok(categoryService.createCategory(categoryDto));
     }
+
+    @Override
+    public ResponseEntity<Response> updateCategory(Long categoryId, CategoryDto categoryRequest) {
+        return ResponseEntity.ok(categoryService.updateCategory(categoryId, categoryRequest));
+    }
+
+    @Override
+    public ResponseEntity<Response> getAllCategory() {
+        return ResponseEntity.ok(categoryService.getAllCategory());
+    }
+
+    @Override
+    public ResponseEntity<Response> getCategoryById(Long categoryId) {
+        return ResponseEntity.ok(categoryService.getCategoryById(categoryId));
+    }
 }

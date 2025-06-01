@@ -13,9 +13,13 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDto {
+public class ProductDto {
     private Long id;
     private String name;
+    private String description;
+    private Integer price;
+    private String imageUrl;
+    private String status;
 
-    private List<ProductDto> productList;
+    private CategoryDto categoryDto;
 }

@@ -13,9 +13,9 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDto {
+public class DippingSauceDto {
     private Long id;
     private String name;
+    private Integer price;
 
-    private List<ProductDto> productList;
 }
