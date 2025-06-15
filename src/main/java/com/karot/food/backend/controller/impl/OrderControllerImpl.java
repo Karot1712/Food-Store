@@ -17,4 +17,14 @@ public class OrderControllerImpl implements OrderController {
     public ResponseEntity<Response> placeOrder(OrderRequest request) {
         return ResponseEntity.ok(orderService.placeOrder(request));
     }
+
+    @Override
+    public ResponseEntity<Response> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
+    @Override
+    public ResponseEntity<Response> getOrderById(Long orderId) {
+        return ResponseEntity.ok(orderService.getOrderById(orderId));
+    }
 }

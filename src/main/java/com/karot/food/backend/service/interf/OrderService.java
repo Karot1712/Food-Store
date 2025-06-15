@@ -5,4 +5,6 @@ import com.karot.food.backend.DTO.Response;
 
 public interface OrderService {
     Response placeOrder(OrderRequest request);
+    Response getAllOrders();
+    Response getOrderById(Long orderId);
 }

@@ -1,5 +1,6 @@
 package com.karot.food.backend.service.impl;
 
+import com.karot.food.backend.DTO.order.OrderDto;
 import com.karot.food.backend.DTO.order.OrderRequest;
 import com.karot.food.backend.DTO.Response;
 import com.karot.food.backend.exception.NotFoundException;
@@ -90,7 +91,29 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
 
+    @Override
+    public Response getAllOrders() {
+        List<OrderDto> orderList = orderRepo.findAll()
+                .stream()
+                .map(entityDtoMapper::mapOrderToDto)
+                .collect(Collectors.toList());
 
+        return Response.builder()
+                .status(200)
+                .orderList(orderList)
+                .build();
+    }
+
+    @Override
+    public Response getOrderById(Long orderId) {
+        Order order = orderRepo.findById(orderId).orElseThrow(()-> new NotFoundException("Order not found"));
+        OrderDto orderDto = entityDtoMapper.mapOrderToDto(order);
+
+        return Response.builder()
+                .status(200)
+                .order(orderDto)
+                .build();
+    }
 
     public Integer priceByQuantity(Integer price, Integer quantity){
         return price * quantity;
