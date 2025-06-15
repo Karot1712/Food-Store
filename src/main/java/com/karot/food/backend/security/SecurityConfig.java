@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(
                         request -> request
-                                .requestMatchers("/auth/**","/user/**","/category/**","/forgot-password/**")
+                                .requestMatchers("/auth/**","/user/**","/category/**","/forgot-password/**","/sauce/**","/size/**","/order/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated())

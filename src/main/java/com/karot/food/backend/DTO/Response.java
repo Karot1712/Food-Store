@@ -1,6 +1,8 @@
 package com.karot.food.backend.DTO;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.karot.food.backend.DTO.order.OrderDto;
+import com.karot.food.backend.DTO.order.OrderItemDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -28,4 +30,13 @@ public class Response {
 
     private ProductDto product;
     private List<ProductDto> productList;
+
+    private DippingSauceDto sauce;
+    private List<DippingSauceDto> sauceList;
+
+    private OrderDto order;
+    private List<OrderDto> orderList;
+
+    private OrderItemDto orderItem;
+    private List<OrderItemDto> orderItemList;
 }

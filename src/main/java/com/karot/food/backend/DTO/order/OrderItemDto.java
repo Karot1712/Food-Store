@@ -1,7 +1,9 @@
-package com.karot.food.backend.DTO;
+package com.karot.food.backend.DTO.order;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.karot.food.backend.DTO.DippingSauceDto;
+import com.karot.food.backend.DTO.ProductDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,10 +15,10 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class DippingSauceDto {
+public class OrderItemDto {
     private Long id;
-    private String name;
-    private Integer quantity;
     private Integer price;
-
+    private Integer quantity;
+    private ProductDto product;
+    private List<OrderItemSauceDto> sauceDtos;
 }

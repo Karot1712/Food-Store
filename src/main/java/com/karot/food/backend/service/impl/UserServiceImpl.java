@@ -14,6 +14,8 @@ import com.karot.food.backend.service.interf.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,14 +44,6 @@ public class  UserServiceImpl implements UserService {
                 .build();
     }
 
-    @Override
-    public Response getAllAdmin() {
-        List<String> adminList = userRepo.findAllAdmin().stream().toList();
-        return Response.builder()
-                .status(200)
-                .listOfEmail(adminList)
-                .build();
-    }
 
     @Override
     public Response updateUserInfo(Long id, String email, String name, String password) {
@@ -66,6 +60,14 @@ public class  UserServiceImpl implements UserService {
                 .build();
     }
 
+    @Override
+    public User getLoginUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        log.info("email: " + email);
 
+        return userRepo.findByEmail(email)
+                .orElseThrow(()-> new NotFoundException("User not found"));
+    }
 }
 

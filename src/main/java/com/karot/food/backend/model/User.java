@@ -1,11 +1,14 @@
 package com.karot.food.backend.model;
 
 import com.karot.food.backend.enums.UserRole;
+import com.karot.food.backend.model.order.Order;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -14,7 +17,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User  {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -40,5 +42,8 @@ public class User  {
 
     @OneToOne(mappedBy = "user")
     private ForgotPassword forgotPassword;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<Order> orderList;
 
 }

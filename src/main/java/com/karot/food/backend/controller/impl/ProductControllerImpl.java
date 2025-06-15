@@ -6,6 +6,7 @@ import com.karot.food.backend.controller.interf.ProductController;
 import com.karot.food.backend.service.interf.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,5 +40,10 @@ public class ProductControllerImpl implements ProductController {
     @Override
     public ResponseEntity<Response> getProductById(Long productId) {
         return ResponseEntity.ok(productService.getProductById(productId));
+    }
+
+    @Override
+    public ResponseEntity<Response> getProductByCategory(Long categoryId) {
+        return ResponseEntity.ok(productService.getProductByCategory(categoryId));
     }
 }

@@ -6,17 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class DippingSauceDto {
-    private Long id;
-    private String name;
-    private Integer quantity;
-    private Integer price;
-
+public class AddressDto {
+    private String street;
+    private String city;
 }

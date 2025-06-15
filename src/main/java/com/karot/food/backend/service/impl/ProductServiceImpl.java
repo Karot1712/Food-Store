@@ -112,4 +112,20 @@ public class ProductServiceImpl implements ProductService {
                 .product(productDto)
                 .build();
     }
+
+    @Override
+    public Response getProductByCategory(Long categoryId) {
+        List<Product> products = productRepo.findByCategoryId(categoryId);
+        if(products.isEmpty()){
+            throw new NotFoundException("No product found for this category");
+        }
+        List<ProductDto> productDtoList = products.stream()
+                .map(entityDtoMapper::mapProductToDto)
+                .collect(Collectors.toList());
+
+        return Response.builder()
+                .status(200)
+                .productList(productDtoList)
+                .build();
+    }
 }

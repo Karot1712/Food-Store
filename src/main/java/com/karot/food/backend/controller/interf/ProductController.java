@@ -44,4 +44,6 @@ public interface ProductController {
     @GetMapping(path = "/get/{productId}")
     public ResponseEntity<Response> getProductById(@PathVariable Long productId);
 
+    @GetMapping(path = "/get-by-category/{categoryId}")
+    public ResponseEntity<Response> getProductByCategory(@PathVariable Long categoryId);
 }

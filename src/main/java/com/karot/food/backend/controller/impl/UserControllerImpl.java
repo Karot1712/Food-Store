@@ -21,10 +21,6 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.ok(userService.getAllUser());
     }
 
-    @Override
-    public ResponseEntity<Response> getAllAdmin() {
-        return ResponseEntity.ok(userService.getAllAdmin());
-    }
 
     @Override
     public ResponseEntity<Response> updateUserInfo(Long id, String email, String name, String password) {

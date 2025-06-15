@@ -12,4 +12,5 @@ public interface ProductService {
     Response deleteProduct(Long productId);
     Response getAllProduct();
     Response getProductById(Long productId);
+    Response getProductByCategory(Long categoryId);
 }

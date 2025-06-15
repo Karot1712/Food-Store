@@ -13,10 +13,6 @@ public interface UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> getAllUser();
 
-    @GetMapping(path = "/get-all-admin")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Response> getAllAdmin();
-
     @PostMapping(path = "/update")
     public ResponseEntity<Response>updateUserInfo(@RequestParam Long id,
                                               @RequestParam(required = false) String email,
